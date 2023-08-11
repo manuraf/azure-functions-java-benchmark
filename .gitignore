@@ -1,0 +1,6 @@
+.idea
+azure-functions-quarkus-benchmark/target
+azure-functions-quarkus-benchmark/local.settings.json
+azure-functions-quarkus-benchmark/.mvn
+azure-functions-spring-benchmark/src/main/resources/local.settings.json
+azure-functions-spring-benchmark/target
