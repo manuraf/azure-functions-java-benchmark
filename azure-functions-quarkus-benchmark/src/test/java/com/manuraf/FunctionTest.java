@@ -1,5 +1,6 @@
-package org.acme;
+package com.manuraf;
 
+import com.manuraf.hello.HelloHandler;
 import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpRequestMessage;
 import com.microsoft.azure.functions.HttpResponseMessage;
@@ -30,7 +31,7 @@ import static org.mockito.Mockito.mock;
 public class FunctionTest {
 
     @Inject
-    Function function;
+    HelloHandler helloHandler;
 
     /**
      * Unit test for HttpTriggerJava method.
@@ -60,7 +61,7 @@ public class FunctionTest {
         doReturn(Logger.getGlobal()).when(context).getLogger();
 
         // Invoke
-        final HttpResponseMessage ret = function.run(req, context);
+        final HttpResponseMessage ret = helloHandler.run(req, context);
 
         // Verify
         assertEquals(ret.getStatus(), HttpStatus.OK);

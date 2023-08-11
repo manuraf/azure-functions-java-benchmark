@@ -1,4 +1,4 @@
-package org.acme;
+package com.manuraf.hello;
 
 import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpMethod;
@@ -21,16 +21,16 @@ import java.util.Optional;
 /**
  * Azure Functions with HTTP Trigger integrated with Quarkus
  */
-public class Function {
+public class HelloHandler {
     @Inject
-    GreetingService service;
+    HelloService service;
 
     /**
      * This function listens at endpoint "/api/HttpExample". Two ways to invoke it using "curl" command in bash:
-     * 1. curl -d "HTTP Body" {your host}/api/HttpExample
-     * 2. curl "{your host}/api/HttpExample?name=HTTP%20Query"
+     * 1. curl -d "HTTP Body" {your host}/api/hello
+     * 2. curl "{your host}/api/hello?name=HTTP%20Query"
      */
-    @FunctionName("HttpExample")
+    @FunctionName("hello")
     public HttpResponseMessage run(
             @HttpTrigger(
                 name = "req",

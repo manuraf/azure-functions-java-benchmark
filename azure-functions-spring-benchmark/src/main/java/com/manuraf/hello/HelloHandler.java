@@ -4,7 +4,6 @@ import com.microsoft.azure.functions.*;
 import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
-import com.manuraf.hello.model.*;
 import com.microsoft.durabletask.DurableTaskClient;
 import com.microsoft.durabletask.TaskOrchestrationContext;
 import com.microsoft.durabletask.azurefunctions.DurableActivityTrigger;
@@ -20,28 +19,34 @@ import java.util.Optional;
 public class HelloHandler {
 
     @Autowired
-    private Hello hello;
+    private HelloService service;
 
     /**
      * This function listens at endpoint "/api/HttpExample". Two ways to invoke it using "curl" command in bash:
-     * 1. curl -d "HTTP Body" {your host}/api/HttpExample
-     * 2. curl "{your host}/api/HttpExample?name=HTTP%20Query"
+     * 1. curl -d "HTTP Body" {your host}/api/hello
+     * 2. curl "{your host}/api/hello?name=HTTP%20Query"
      */
-    @FunctionName("HttpExample")
+    @FunctionName("hello")
     public HttpResponseMessage run(
         @HttpTrigger(name = "req",
                 methods = {HttpMethod.GET, HttpMethod.POST},
                 authLevel = AuthorizationLevel.ANONYMOUS)
-                HttpRequestMessage<Optional<User>> request,
+                HttpRequestMessage<Optional<String>> request,
         final ExecutionContext context) {
-        User user = request.getBody()
-                           .filter(u -> u.getName() != null)
-                           .orElseGet(() -> new User(request.getQueryParameters().getOrDefault("name", "world")));
-        context.getLogger().info("Greeting user name: " + user.getName());
-        return request.createResponseBuilder(HttpStatus.OK)
-                      .body(hello.apply(user))
-                      .header("Content-Type", "application/json")
-                      .build();
+        context.getLogger().info("Java HTTP trigger processed a request.");
+
+        // Parse query parameter
+        final String query = request.getQueryParameters().get("name");
+        final String name = request.getBody().orElse(query);
+
+
+
+        if (name == null) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass a name on the query string or in the request body").build();
+        } else {
+            return request.createResponseBuilder(HttpStatus.OK).body(service.greeting(name)).build();
+        }
+
     }
 
 
